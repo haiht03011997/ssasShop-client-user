@@ -1,0 +1,26 @@
+.top-bar {
+  background-color: #0b1632e3;
+  min-height: 30px;
+  font-size: 16px;
+  color: white;
+
+  .action {
+    padding: 0.5rem;
+    border-radius: 10px;
+    text-decoration: none;
+    color: white;
+
+    &.question {
+      background-color: #ad3838;
+    }
+
+    &.introduction {
+      background-color: #4977aa;
+    }
+  }
+
+  div:not(:last-of-type) {
+    border-right: 1px solid white;
+    padding-right: 1rem;
+  }
+}

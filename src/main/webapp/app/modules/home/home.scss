@@ -1,0 +1,13 @@
+.home {
+  margin-left: 0.5rem;
+  margin-right: 1rem;
+
+  .img-container {
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+
+  .carousel-mid {
+    @extend .img-container;
+  }
+}

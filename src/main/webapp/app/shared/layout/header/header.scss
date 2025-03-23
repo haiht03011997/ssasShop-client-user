@@ -1,0 +1,21 @@
+.header {
+  color: white;
+  font-size: 18px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  width: '100%';
+  display: 'flex';
+  align-items: 'center';
+
+  .link-home {
+    color: white;
+    text-decoration: none;
+  }
+}
+
+.sub-menu-item {
+  .ant-menu-submenu-title {
+    display: flex !important;
+  }
+}

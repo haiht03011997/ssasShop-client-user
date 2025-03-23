@@ -1,0 +1,17 @@
+.product-description-full {
+  height: 100%;
+}
+
+.product-description {
+  max-height: 40vh;
+  overflow: hidden;
+  position: relative;
+
+  .btn-expand-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: white;
+    padding-bottom: 1rem;
+  }
+}
