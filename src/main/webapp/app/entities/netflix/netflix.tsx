@@ -10,6 +10,7 @@ const NetflixComponent = () => {
   const dispatch = useAppDispatch();
 
   const netflixList = useAppSelector(state => state.netflix.entities);
+  const totalItems = useAppSelector(state => state.netflix.totalItems);
 
   // initialize sate
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -22,8 +23,8 @@ const NetflixComponent = () => {
     dispatch(getEntities())
   }
 
-  const handleViewDetail = (slug: string) => {
-    navigate(`chi-tiet/${slug}`);
+  const handleViewDetail = (record: any) => {
+    navigate(`chi-tiet/${record.slug}`, { state: { id: record.id } });
   };
 
   const handleBuy = () => {
@@ -40,6 +41,7 @@ const NetflixComponent = () => {
       handleChangePage={handlePageChange}
       handleDetail={handleViewDetail}
       products={netflixList}
+      total={totalItems}
       currentPage={currentPage}
       imgSrc="content/images/netflix.svg"
       title="Netflix giá rẻ"

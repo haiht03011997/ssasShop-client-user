@@ -24,6 +24,7 @@ const YoutubeComponent = () => {
       handleChangePage={handlePageChange}
       handleDetail={handleViewDetail}
       products={products}
+      total={10}
       currentPage={currentPage}
       imgSrc="content/images/youtube.svg"
       title="Youtube Premium"

@@ -20,7 +20,7 @@
   }
 }
 
-@include antd-btn('warning', #ffffff, #faad14, #faad14);
+@include antd-btn('warning', #ffffff, #faad14, #ffffff);
 @include antd-btn('export', $white, $green, $white);
 @include antd-btn('primary', $white, $blue, $white);
 @include antd-btn('secondary', $white, $secondary, $white);

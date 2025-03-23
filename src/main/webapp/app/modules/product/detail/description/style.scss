@@ -1,11 +1,19 @@
 .product-description-full {
   height: 100%;
+
+  img {
+    width: 100%;
+  }
 }
 
 .product-description {
   max-height: 40vh;
   overflow: hidden;
   position: relative;
+
+  img {
+    width: 100%;
+  }
 
   .btn-expand-content {
     position: absolute;

@@ -2,19 +2,21 @@ import { Badge, Button, Card, Col, Image, Pagination, Row, Typography } from 'an
 import { IProduct } from 'app/shared/model/product.model';
 import React from 'react';
 import './style.scss';
+import { api } from 'app/config/axios-interceptor';
 const { Title, Text } = Typography;
 
 interface PricingProps {
   title: string;
   currentPage: number;
+  total: number;
   imgSrc?: string;
   products: IProduct[];
-  handleDetail: (slug: string) => void;
+  handleDetail: (record: any) => void;
   handleBuy: () => void;
   handleChangePage: (page: number) => void;
 }
 
-const ProductPricing = ({ handleBuy, handleChangePage, handleDetail, products, title, currentPage, imgSrc }: PricingProps) => {
+const ProductPricing = ({ handleBuy, handleChangePage, handleDetail, products, title, currentPage, imgSrc, total }: PricingProps) => {
   return (
     <div className="product-container">
       <div className="product-header">
@@ -27,7 +29,7 @@ const ProductPricing = ({ handleBuy, handleChangePage, handleDetail, products, t
         {products.map(product => (
           <Col md={6} key={product.id}>
             <Badge.Ribbon text={`Giảm -${product.discount}%`} color="red" className="discount-ribbon">
-              <Card hoverable className="product-card" cover={<Image alt={product.name} src={product.imageUrl} className="product-image" />}>
+              <Card hoverable className="product-card" cover={<Image alt={product.name} src={`${SERVER_API}${product.imageUrl}`} className="product-image" />}>
                 <div className="d-flex flex-column gap-3">
                   <Title level={5} className="mx-2 product-product-title">
                     {product.name}
@@ -44,7 +46,7 @@ const ProductPricing = ({ handleBuy, handleChangePage, handleDetail, products, t
                     <Button
                       type="default"
                       onClick={() => {
-                        handleDetail(product.slug);
+                        handleDetail(product);
                       }}
                       className="detail-button"
                     >
@@ -65,7 +67,7 @@ const ProductPricing = ({ handleBuy, handleChangePage, handleDetail, products, t
         showLessItems
         pageSize={10}
         showSizeChanger={false}
-        total={200}
+        total={total}
         className="py-2 d-flex align-items-center justify-content-center"
         onChange={page => handleChangePage(page)}
       />
