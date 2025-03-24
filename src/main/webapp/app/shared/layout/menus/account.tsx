@@ -1,39 +1,21 @@
-import { DownOutlined } from '@ant-design/icons';
+import { DownOutlined, LockOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Dropdown, Space } from 'antd';
-import Title from 'antd/es/typography/Title';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import LoginModal from 'app/modules/login/login-modal';
 import { handleLoginModal } from 'app/shared/reducers/authentication';
-import React, { useState } from 'react';
-import { Translate } from 'react-jhipster';
-import { Navigate, useNavigate } from 'react-router';
+import React from 'react';
+import { useNavigate } from 'react-router';
 
 const accountMenuItemsAuthenticated = [
   {
-    key: 'settings',
-    icon: 'wrench',
-    label: <Translate contentKey="global.menu.account.settings">Settings</Translate>,
-  },
-  {
     key: 'passwordItem',
-    icon: 'lock',
-    label: <Translate contentKey="global.menu.account.password">Settings</Translate>,
+    icon: <LockOutlined />,
+    label: 'Cập nhật mật khẩu',
   },
   {
     key: 'logout',
-    icon: 'sign-out-alt',
-    label: <Translate contentKey="global.menu.account.logout">Settings</Translate>,
-  },
-];
-
-const accountMenuItems = [
-  {
-    key: 'login',
-    label: <Translate contentKey="global.menu.account.login">Sign in</Translate>,
-  },
-  {
-    key: 'register',
-    label: <Translate contentKey="global.menu.account.register"> Register</Translate>,
+    icon: <LogoutOutlined />,
+    label: 'Đăng xuất',
   },
 ];
 
@@ -41,15 +23,13 @@ export const AccountMenu = ({ isAuthenticated = false }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const showModalLogin = useAppSelector(state => state.authentication.showModalLogin);
+  const account = useAppSelector(state => state.account.info);
 
   const handleMenuClick = (event: any) => {
     const key = event.key;
     switch (key) {
       case 'logout':
         navigate('logout');
-        break;
-      case 'settings':
-        navigate('settings');
         break;
       case 'passwordItem':
         navigate('password');
@@ -83,7 +63,7 @@ export const AccountMenu = ({ isAuthenticated = false }) => {
                 e.preventDefault();
               }}
             >
-              <Translate contentKey="global.menu.account.main">Account</Translate>
+              {account?.fullName}
               <DownOutlined />
             </span>
           </Space>

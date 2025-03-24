@@ -22,9 +22,7 @@ export const PasswordPage = () => {
     setShowModal(true);
   }, []);
 
-  const account = useAppSelector(state => state.authentication.account);
-  const successMessage = useAppSelector(state => state.password.successMessage);
-  const errorMessage = useAppSelector(state => state.password.errorMessage);
+  const account = useAppSelector(state => state.account.info);
 
   const handleChangePassword = async values => {
     const response = await dispatch(savePassword(values));
@@ -32,15 +30,6 @@ export const PasswordPage = () => {
       handleClose();
     }
   };
-
-  // useEffect(() => {
-  //   if (successMessage) {
-  //     toast.success(successMessage);
-  //   } else if (errorMessage) {
-  //     toast.error(errorMessage);
-  //   }
-  //   dispatch(reset());
-  // }, [successMessage, errorMessage]);
 
   const handleClose = () => {
     setShowModal(false);

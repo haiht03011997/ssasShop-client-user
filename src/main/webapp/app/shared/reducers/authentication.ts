@@ -7,6 +7,7 @@ import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
 import { serializeAxiosError } from './reducer.utils';
 import dayjs from 'dayjs';
+import { storeAccount } from 'app/modules/account/account.reducer';
 
 const AUTH_TOKEN_KEY = 'authentication-token';
 
@@ -50,7 +51,7 @@ export const auth: (userName: string, password: string, rememberMe?: boolean) =>
         if (jwtToken) {
           const tokenDecoded: any = jwtDecode(jwtToken);
           const account = {
-            name: tokenDecoded.sub,
+            fullName: tokenDecoded.sub,
           };
           dispatch(storeAccount(account));
           setTokenInCookies(jwtToken, tokenDecoded.exp);
@@ -123,15 +124,6 @@ export const AuthenticationSlice = createSlice({
         isAuthenticated: true,
       };
     },
-    storeAccount(state, action) {
-      return {
-        ...state,
-        account: {
-          userName: action.payload.name,
-          isAdmin: action.payload.isAdmin,
-        },
-      };
-    },
   },
   extraReducers(builder) {
     builder
@@ -156,7 +148,7 @@ export const AuthenticationSlice = createSlice({
   },
 });
 
-export const { logoutSession, authError, clearAuth, authorized, storeAccount, handleLoginModal } = AuthenticationSlice.actions;
+export const { logoutSession, authError, clearAuth, authorized, handleLoginModal } = AuthenticationSlice.actions;
 
 // Reducer
 export default AuthenticationSlice.reducer;

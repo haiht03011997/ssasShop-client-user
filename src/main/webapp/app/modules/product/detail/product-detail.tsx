@@ -1,13 +1,16 @@
 import { InfoCircleOutlined, MessageOutlined, ShoppingCartOutlined } from '@ant-design/icons';
-import { Badge, Button, Card, Col, Image, Rate, Row, Table, Tabs, Typography } from 'antd';
-import { useAppDispatch } from 'app/config/store';
+import { Badge, Button, Card, Col, Image, InputNumber, Rate, Row, Table, Tabs, Typography } from 'antd';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
+import { addToCart, setCart, setLoadingCart } from 'app/entities/cart/cart.reducer';
 import { getEntity } from 'app/entities/netflix/netflix.reducer';
+import { formatCurrencyVND } from 'app/shared/util/help';
+import parse from "html-react-parser";
+import _ from 'lodash';
 import React, { useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import ProductDescription from './description/product-description';
 import ProductRage from './rate/product-rate';
 import './style.scss';
-import { formatCurrencyVND } from 'app/shared/util/help';
 
 const { Title, Text } = Typography;
 
@@ -16,6 +19,9 @@ const ProductDetailPage = () => {
   const location = useLocation();
   const id = location.state?.id; // Lấy id từ state
   const { slug } = useParams(); // Lấy slug từ URL
+
+  const cartItems = useAppSelector(state => state.cart.cartItems);
+
   // initialize state
   const [expand, collapse] = React.useState(false);
   const [detailProduct, setDetailProduct] = React.useState(null)
@@ -23,21 +29,6 @@ const ProductDetailPage = () => {
   const handleExpandContent = () => {
     collapse(!expand);
   };
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    handleGetDetailProduct();
-  }, []);
-
-  const handleGetDetailProduct = () => {
-    if (id)
-      dispatch(getEntity(id)).then(res => {
-        if (res && res.payload) {
-          const result = (res.payload as any)
-          setDetailProduct(result.data)
-        }
-      })
-  }
 
   const items = [
     {
@@ -62,34 +53,89 @@ const ProductDetailPage = () => {
     { dataIndex: 'value', key: 'value', className: 'value-column' },
   ];
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    handleGetDetailProduct();
+  }, []);
+
+  const handleGetDetailProduct = () => {
+    if (id)
+      dispatch(getEntity(id)).then(res => {
+        if (res && res.payload) {
+          const result = (res.payload as any)
+          setDetailProduct({ ...result.data, quantity: 1 })
+        }
+      })
+  }
+
+  const handleAddToCart = (event, product) => {
+    dispatch(setLoadingCart())
+    event.preventDefault();
+    if (cartItems && cartItems.length > 0) {
+      dispatch(setCart(cartItems.map(item => ({
+        ...item,
+        quantity: item.id === detailProduct?.id ? item.quantity + detailProduct.quantity : item.quantity
+      }))));
+    }
+
+    else
+      dispatch(addToCart(product));
+  }
+
+  const handleChangeQuantity = (value) => {
+    setDetailProduct({ ...detailProduct, quantity: value })
+  }
+
+  const handleMaxQuantity = () => {
+    if (cartItems && cartItems.length > 0) {
+      const productInCart = _.find(cartItems, o => o.id === detailProduct?.id);
+      if (productInCart) {
+        return detailProduct?.stock - productInCart.quantity
+      }
+      return detailProduct?.stock
+    }
+  }
+
   return (
     <>
       <div className="product-detail-container d-flex flex-column gap-3">
         <div className="product-card">
           <Row gutter={16}>
             <Col span={10}>
-              <Badge.Ribbon text={`Giảm -${46}%`} color="red" placement="start">
-                <Image src={`${SERVER_API}${detailProduct?.imageUrl}`} alt="Netflix Premium" className="product-image" />
-              </Badge.Ribbon>
+              {handleMaxQuantity() === 0 ?
+                <Badge.Ribbon text="Hết hàng" color="gray" placement="start">
+                  <Image src={`${SERVER_API}${detailProduct?.imageUrl}`} alt="Netflix Premium" className="product-image" />
+                </Badge.Ribbon>
+                : <Badge.Ribbon text={`Giảm -${46}%`} color="red" placement="start">
+                  <Image src={`${SERVER_API}${detailProduct?.imageUrl}`} alt="Netflix Premium" className="product-image" />
+                </Badge.Ribbon>
+              }
             </Col>
             <Col span={14} className="d-flex flex-column gap-3">
-              <Title level={3}>{slug}</Title>
+              <Title className='fw-bold' level={3}>{slug}</Title>
               <div className="d-flex gap-2">
                 <Rate allowHalf defaultValue={4.5} />
                 <Text type="secondary"> 2 đánh giá | Đã bán 1.5k</Text>
               </div>
               <div className="d-flex gap-2">
-                <Text delete>{formatCurrencyVND(detailProduct?.price)} đ</Text>
-                <span className="text-danger">{formatCurrencyVND(detailProduct?.newPrice)} đ</span>
+                <Text className='fw-bold'>Giá:</Text>
+                <div className="d-flex gap-2">
+                  <Text delete>{formatCurrencyVND(detailProduct?.price)}đ</Text>
+                  <span className="text-danger">{detailProduct?.newPrice ? `${formatCurrencyVND(detailProduct?.newPrice)}đ` : 'Đang cập nhật'}</span>
+                </div>
+              </div>
+              <div className="d-flex gap-2 align-items-center">
+                <Text className='fw-bold'>Số lượng:</Text>
+                <InputNumber disabled={handleMaxQuantity() === 0} defaultValue={1} min={1} max={handleMaxQuantity()} onChange={(value) => { handleChangeQuantity(value) }} />
               </div>
               <Row className="d-flex justify-content-between" gutter={16}>
                 <Col md={12}>
-                  <Button size="large" className="primary w-100" icon={<ShoppingCartOutlined />}>
+                  <Button size="large" disabled={handleMaxQuantity() === 0} onClick={e => { handleAddToCart(e, detailProduct) }} className="primary w-100" icon={<ShoppingCartOutlined />}>
                     Thêm Giỏ Hàng
                   </Button>
                 </Col>
                 <Col md={12}>
-                  <Button size="large" className="primary w-100">
+                  <Button size="large" disabled={handleMaxQuantity() === 0} className="primary w-100">
                     Mua Ngay
                   </Button>
                 </Col>
@@ -100,12 +146,10 @@ const ProductDetailPage = () => {
             </Col>
           </Row>
         </div>
+
         {detailProduct?.note &&
-          <Card title="Lưu Ý Sản Phẩm">
-            <ul>
-              <li>Tài khoản có thể dùng cho nhiều User, nhưng chỉ được 1 User đăng nhập cùng lúc.</li>
-              <li>...</li>
-            </ul>
+          <Card prefixCls='note' className="text-start bg-gradient">
+            {parse(detailProduct?.note)}
           </Card>
         }
 

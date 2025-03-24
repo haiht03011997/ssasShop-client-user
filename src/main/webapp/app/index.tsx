@@ -6,8 +6,9 @@ import { bindActionCreators } from 'redux';
 import AppComponent from 'app/app';
 // import setupAxiosInterceptors from 'app/config/axios-interceptor';
 import { loadIcons } from 'app/config/icon-loader';
-import getStore from 'app/config/store';
+import getStore, { persistor } from 'app/config/store';
 import { clearAuthentication } from 'app/shared/reducers/authentication';
+import { PersistGate } from 'redux-persist/integration/react';
 
 const store = getStore();
 
@@ -22,9 +23,11 @@ const root = createRoot(rootEl);
 const render = Component =>
   root.render(
     <Provider store={store}>
-      <div>
-        <Component />
-      </div>
+      <PersistGate loading={null} persistor={persistor}>
+        <div>
+          <Component />
+        </div>
+      </PersistGate>
     </Provider>,
   );
 

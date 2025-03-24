@@ -1,0 +1,25 @@
+.footer {
+  font-size: 20px;
+  padding: 0;
+  color: white;
+  background-image: url('../../../content/images/footer-background.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  .section-content {
+    background-color: rgba(240, 230, 230, 0.863);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.829);
+    color: black;
+
+    .icon-box-text {
+      border-radius: 10px;
+      background-color: white;
+      font-size: 18px;
+    }
+
+    .icon-box-text:last-child {
+      padding-right: 3rem;
+    }
+  }
+}

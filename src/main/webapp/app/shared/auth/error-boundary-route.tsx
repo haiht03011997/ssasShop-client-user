@@ -1,10 +1,8 @@
 import React from 'react';
 import { Navigate, PathRouteProps, useLocation } from 'react-router-dom';
 
-import { AUTHORITIES } from 'app/config/constants';
 import { useAppSelector } from 'app/config/store';
 import ErrorBoundary from 'app/shared/error/error-boundary';
-// import { hasPermissionsByPath } from '../util/permissions';
 
 interface IOwnProps extends PathRouteProps {
   hasAnyAuthorities?: string[];
@@ -14,7 +12,7 @@ interface IOwnProps extends PathRouteProps {
 export const ErrorBoundaryRoute = ({ children, hasAnyAuthorities = [], ...rest }: IOwnProps) => {
   const isAuthenticated = useAppSelector(state => state.authentication.isAuthenticated);
   const sessionHasBeenFetched = useAppSelector(state => state.authentication.sessionHasBeenFetched);
-  const account = useAppSelector(state => state.authentication.account);
+  const account = useAppSelector(state => state.account.info);
   const isAuthorized = hasAnyAuthority(account.authorities, hasAnyAuthorities);
   const pageLocation = useLocation();
 

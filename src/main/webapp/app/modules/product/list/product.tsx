@@ -2,7 +2,6 @@ import { Badge, Button, Card, Col, Image, Pagination, Row, Typography } from 'an
 import { IProduct } from 'app/shared/model/product.model';
 import React from 'react';
 import './style.scss';
-import { api } from 'app/config/axios-interceptor';
 const { Title, Text } = Typography;
 
 interface PricingProps {

@@ -50,11 +50,11 @@ module.exports = async options =>
       static: {
         directory: './dist/',
       },
-      port: 9060,
+      port: 9161,
       proxy: [
         {
           context: ['/api', '/services', '/management', '/h2-console', '/auth'],
-          target: `http${options.tls ? 's' : ''}://localhost:8080`,
+          target: `http${options.tls ? 's' : ''}://localhost:8181`,
           secure: false,
           changeOrigin: options.tls,
         },
@@ -67,15 +67,15 @@ module.exports = async options =>
       process.env.JHI_DISABLE_WEBPACK_LOGS
         ? null
         : new SimpleProgressWebpackPlugin({
-            format: options.stats === 'minimal' ? 'compact' : 'expanded',
-          }),
+          format: options.stats === 'minimal' ? 'compact' : 'expanded',
+        }),
       new BrowserSyncPlugin(
         {
           https: options.tls,
           host: 'localhost',
           port: 9000,
           proxy: {
-            target: `http${options.tls ? 's' : ''}://localhost:${options.watch ? '8080' : '9060'}`,
+            target: `http${options.tls ? 's' : ''}://localhost:${options.watch ? '8181' : '9161'}`,
             ws: true,
             proxyOptions: {
               changeOrigin: false, //pass the Host header to the backend unchanged  https://github.com/Browsersync/browser-sync/issues/430
