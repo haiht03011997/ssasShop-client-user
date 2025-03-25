@@ -5,12 +5,12 @@ import { Link } from 'react-router-dom';
 export const items = [
   {
     label: 'Danh mục',
-    key: '1',
+    key: 'category-horizontal',
     icon: <DownOutlined />,
     children: [
       {
         label: 'Giải trí',
-        key: 'entertainment',
+        key: 'entertainment-horizontal',
         className: 'sub-menu-item',
         icon: <img loading="lazy" src="/content/images/entertainment.svg" alt="entertainment" />,
         children: [
@@ -20,7 +20,7 @@ export const items = [
                 Tài khoản Spotify
               </Link>
             ),
-            key: 'Spotify',
+            key: 'Spotify-horizontal',
             className: 'd-flex',
             icon: <img loading="lazy" src="/content/images/spotify.svg" alt="spotify" />,
           },
@@ -30,7 +30,7 @@ export const items = [
                 Tài khoản Netflix
               </Link>
             ),
-            key: 'netflix',
+            key: 'netflix-horizontal',
             className: 'd-flex',
             icon: <img loading="lazy" src="/content/images/netflix.svg" alt="netflix" />,
           },
@@ -40,7 +40,7 @@ export const items = [
                 Tài khoản Youtube
               </Link>
             ),
-            key: 'youtube',
+            key: 'youtube-horizontal',
             className: 'd-flex',
             icon: <img loading="lazy" src="/content/images/youtube.svg" alt="youtube" />,
           },
@@ -48,7 +48,7 @@ export const items = [
       },
       {
         label: 'Công việc',
-        key: 'work',
+        key: 'work-horizontal',
         className: 'sub-menu-item',
         icon: <img loading="lazy" src="/content/images/brief-case.svg" alt="brief-case" />,
         children: [
@@ -58,7 +58,7 @@ export const items = [
                 Tài khoản Adobe Photoshop
               </Link>
             ),
-            key: 'photoshop',
+            key: 'photoshop-horizontal',
             className: 'd-flex',
             icon: <img loading="lazy" src="/content/images/photoshop.svg" alt="photoshop" />,
           },
@@ -68,7 +68,7 @@ export const items = [
                 Tài khoản Adobe Illustrator
               </Link>
             ),
-            key: 'netflix',
+            key: 'netflix-illustrator',
             className: 'd-flex',
             icon: <img loading="lazy" src="/content/images/illustrator.svg" alt="illustrator" />,
           },
@@ -77,7 +77,7 @@ export const items = [
       {
         label: 'Lưu trữ',
         className: 'sub-menu-item',
-        key: 'storage',
+        key: 'storage-horizontal',
         icon: <img loading="lazy" src="/content/images/storage.svg" alt="storage" />,
         children: [
           {
@@ -86,7 +86,7 @@ export const items = [
                 Tài khoản Google Drive
               </Link>
             ),
-            key: 'google-drive',
+            key: 'google-drive-horizontal',
             className: 'd-flex',
             icon: <img loading="lazy" src="/content/images/google-drive.svg" alt="google-drive" />,
           },

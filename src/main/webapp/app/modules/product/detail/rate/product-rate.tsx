@@ -1,37 +1,8 @@
-import React, { useState } from 'react';
-import { Form, Input, Button, Rate, List, Avatar, message, Progress, Divider, Card, Table } from 'antd';
+import { Avatar, Button, Divider, Form, Input, List, Progress, Rate } from 'antd';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
+import React, { useEffect } from 'react';
+import { createReview, getEntities } from './product-review.reducer';
 import './style.scss';
-import { InfoCircleOutlined } from '@ant-design/icons';
-const fakeReviews = [
-  {
-    id: 1,
-    name: 'Hoa Hạnh Thi Khanh',
-    rating: 5,
-    comment: 'Sản phẩm chất lượng, giá rẻ, rất hợp lý cho người dùng.',
-    date: '11/03/2025',
-  },
-  {
-    id: 2,
-    name: 'Minh Nhật',
-    rating: 4,
-    comment: 'Sản phẩm chất lượng, giá rẻ, rất hợp lý cho người dùng.',
-    date: '02/02/2025',
-  },
-];
-
-const data = [
-  { key: '1', label: 'Tính năng', value: 'Giải trí, xem phim' },
-  { key: '2', label: 'Gói đăng ký', value: 'Cấp sẵn 1 User' },
-  { key: '3', label: 'Hạn gói', value: '4 Ngày' },
-  { key: '4', label: 'Bảo hành', value: 'Trọn gói' },
-  { key: '5', label: 'Hỗ trợ', value: 'Tất cả các thiết bị' },
-  { key: '6', label: 'Cho phép', value: '1 Thiết bị cùng lúc' },
-];
-
-const columns = [
-  { dataIndex: 'label', key: 'label', className: 'label-column' },
-  { dataIndex: 'value', key: 'value', className: 'value-column' },
-];
 
 const calculateStats = values => {
   const totalReviews = values.length;
@@ -44,21 +15,40 @@ const calculateStats = values => {
 
   return { avgRating, ratingCounts, totalReviews };
 };
+interface IProductProps {
+  product: any;
+}
+const ProductRage = ({ product }: IProductProps) => {
+  const dispatch = useAppDispatch();
+  const [form] = Form.useForm();
+  const reviews = useAppSelector(context => context.productReview.entities)
+  const account = useAppSelector(context => context.account.info)
+  const updateSuccess = useAppSelector(context => context.productReview.updateSuccess)
 
-const ProductRage = () => {
-  const [reviews, setReviews] = useState(fakeReviews);
   const { avgRating, ratingCounts, totalReviews } = calculateStats(reviews);
 
+  useEffect(() => {
+    if (product)
+      handleGetPageReviews();
+  }, [product])
+
+  useEffect(() => {
+    if (updateSuccess) {
+      form.resetFields(['content']);
+      handleGetPageReviews();
+    }
+  }, [updateSuccess])
+
+  const handleGetPageReviews = () => {
+    dispatch(getEntities(product?.id))
+  }
+
   const onFinish = values => {
-    const newReview = {
-      id: reviews.length + 1,
-      name: values.name,
-      rating: values.rating,
-      comment: values.comment,
-      date: new Date().toLocaleDateString(),
+    const payload = {
+      ...values,
+      productId: product?.id,
     };
-    setReviews([newReview, ...reviews]);
-    message.success('Đánh giá của bạn đã được gửi!');
+    dispatch(createReview(payload))
   };
 
   return (
@@ -86,19 +76,19 @@ const ProductRage = () => {
         className="product-review-list"
         itemLayout="horizontal"
         dataSource={reviews}
-        renderItem={item => (
+        renderItem={(item: any) => (
           <List.Item className="review1-item">
             <List.Item.Meta
-              avatar={<Avatar className="review1-avatar">{item.name.charAt(0)}</Avatar>}
+              avatar={<Avatar className="review1-avatar">{item?.userName?.charAt(0)}</Avatar>}
               title={
                 <div className="product-review-header">
-                  <span className="product-review-name">{item.name}</span>
+                  <span className="product-review-name">{item?.userName}</span>
                   <Rate disabled value={item.rating} className="product-review-rating" />
                 </div>
               }
               description={
                 <div className="product-review-comment">
-                  {item.comment}
+                  {item.content}
                   <span className="product-review-date">{item.date}</span>
                 </div>
               }
@@ -109,13 +99,13 @@ const ProductRage = () => {
       <Divider />
       <h3 className="product-review-form-title">Thêm đánh giá của bạn</h3>
       <Form onFinish={onFinish} layout="vertical" className="product-review-form">
-        <Form.Item name="name" label="Tên của bạn" rules={[{ required: true, message: 'Vui lòng nhập tên' }]}>
+        <Form.Item name="userName" initialValue={account?.fullName} label="Tên của bạn" rules={[{ required: true, message: 'Vui lòng nhập tên' }]}>
           <Input placeholder="Nhập tên của bạn" className="product-review-input" />
         </Form.Item>
         <Form.Item name="rating" label="Đánh giá" rules={[{ required: true, message: 'Vui lòng chọn số sao' }]}>
           <Rate className="product-review-rate" />
         </Form.Item>
-        <Form.Item name="comment" label="Nhận xét" rules={[{ required: true, message: 'Vui lòng nhập nhận xét' }]}>
+        <Form.Item name="content" label="Nhận xét" rules={[{ required: true, message: 'Vui lòng nhập nhận xét' }]}>
           <Input.TextArea rows={4} placeholder="Nhập nhận xét của bạn" className="product-review-textarea" />
         </Form.Item>
         <Form.Item>

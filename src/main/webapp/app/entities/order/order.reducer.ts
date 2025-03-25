@@ -28,7 +28,7 @@ export const createOrder = createAsyncThunk(
 
 // slice
 
-export const CartSlice = createEntitySlice({
+export const OrderSlice = createEntitySlice({
   name: 'order',
   initialState,
 
@@ -48,7 +48,7 @@ export const CartSlice = createEntitySlice({
   },
 });
 
-export const { reset } = CartSlice.actions;
+export const { reset } = OrderSlice.actions;
 
 // Reducer
-export default CartSlice.reducer;
+export default OrderSlice.reducer;

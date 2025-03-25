@@ -1,13 +1,15 @@
 import { InfoCircleOutlined, MessageOutlined, ShoppingCartOutlined } from '@ant-design/icons';
-import { Badge, Button, Card, Col, Image, InputNumber, Rate, Row, Table, Tabs, Typography } from 'antd';
+import { Badge, Button, Card, Col, Divider, Image, InputNumber, Rate, Row, Tabs, Typography } from 'antd';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
-import { addToCart, setCart, setLoadingCart } from 'app/entities/cart/cart.reducer';
+import { addToCart, listenToStockUpdates, setCart, setLoadingCart } from 'app/entities/cart/cart.reducer';
 import { getEntity } from 'app/entities/netflix/netflix.reducer';
 import { formatCurrencyVND } from 'app/shared/util/help';
 import parse from "html-react-parser";
 import _ from 'lodash';
 import React, { useEffect } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import ProductCard from '../list/product-item';
+import { getOtherEntities } from '../product.reducer';
 import ProductDescription from './description/product-description';
 import ProductRage from './rate/product-rate';
 import './style.scss';
@@ -17,10 +19,12 @@ const { Title, Text } = Typography;
 const ProductDetailPage = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
   const id = location.state?.id; // Lấy id từ state
   const { slug } = useParams(); // Lấy slug từ URL
 
   const cartItems = useAppSelector(state => state.cart.cartItems);
+  const othersProduct = useAppSelector(state => state.product.entities);
 
   // initialize state
   const [expand, collapse] = React.useState(false);
@@ -36,7 +40,7 @@ const ProductDetailPage = () => {
       label: 'Mô tả',
       children: <ProductDescription content={detailProduct?.description} expand={expand} handleExpandContent={handleExpandContent} />,
     },
-    { key: '2', label: 'Đánh giá', children: <ProductRage /> },
+    { key: '2', label: 'Đánh giá', children: <ProductRage product={detailProduct} /> },
   ];
 
   const data = [
@@ -55,8 +59,14 @@ const ProductDetailPage = () => {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    dispatch(listenToStockUpdates()); // Lắng nghe cập nhật stock từ SignalR
     handleGetDetailProduct();
   }, []);
+
+  useEffect(() => {
+    if (detailProduct)
+      handleFetchOtherProducts()
+  }, [detailProduct])
 
   const handleGetDetailProduct = () => {
     if (id)
@@ -72,14 +82,31 @@ const ProductDetailPage = () => {
     dispatch(setLoadingCart())
     event.preventDefault();
     if (cartItems && cartItems.length > 0) {
-      dispatch(setCart(cartItems.map(item => ({
-        ...item,
-        quantity: item.id === detailProduct?.id ? item.quantity + detailProduct.quantity : item.quantity
-      }))));
-    }
+      // Check if the product already exists in the cart
+      const productExists = cartItems.some(item => item.id === product?.id);
 
-    else
-      dispatch(addToCart(product));
+      if (productExists) {
+        // Update the quantity if the product already exists
+        dispatch(setCart(cartItems.map(item => ({
+          ...item,
+          quantity: item.id === product?.id
+            ? item.quantity + product.quantity
+            : item.quantity
+        }))));
+      } else {
+        // Add the new product to the cart
+        dispatch(setCart([...cartItems, {
+          ...product,
+          quantity: product.quantity
+        }]));
+      }
+    } else {
+      // Add the product if the cart is empty
+      dispatch(addToCart({
+        ...product,
+        quantity: product.quantity
+      }));
+    }
   }
 
   const handleChangeQuantity = (value) => {
@@ -95,6 +122,15 @@ const ProductDetailPage = () => {
       return detailProduct?.stock
     }
   }
+
+  const handleFetchOtherProducts = () => {
+    dispatch(getOtherEntities({ categoryId: detailProduct?.categoryId, id: detailProduct?.id }))
+  }
+
+  const handleViewDetail = (record: any) => {
+    navigate(`/chi-tiet/${record.slug}`, { state: { id: record.id } });
+    window.location.reload(); // Reload lại trang ngay sau khi điều hướng
+  };
 
   return (
     <>
@@ -163,7 +199,23 @@ const ProductDetailPage = () => {
               <h4 className="font-weight-bold">
                 <InfoCircleOutlined /> Thông Tin Sản Phẩm
               </h4>
-              <Table dataSource={data} columns={columns} pagination={false} showHeader={false} rowClassName={() => 'table-row'} />
+              <Divider />
+              <Row className='f-lex justify-content-between'>
+                <Col>
+                  <h6 className='text-lg'>Thể loại</h6>
+                </Col>
+                <Col>
+                  <h6 className='text-lg'>{detailProduct?.categoryName}</h6>
+                </Col>
+              </Row>
+              <Row className='f-lex justify-content-between'>
+                <Col>
+                  <h6 className='text-lg'> Thời hạn</h6>
+                </Col>
+                <Col>
+                  <h6 className='text-lg'>{detailProduct?.durationName}</h6>
+                </Col>
+              </Row>
             </Card>
           </Col>
         </Row>
@@ -172,20 +224,8 @@ const ProductDetailPage = () => {
         <Title level={4} className="section-title">
           Sản phẩm tương tự
         </Title>
-        <Row gutter={16}>
-          <Col span={8}>
-            <Card hoverable cover={<img src="#" alt="" className="similar-product-image" />}>
-              <Title level={5}>Gói Tài Khoản VieON 12 Tháng</Title>
-              <Button className="primary">Mua Ngay</Button>
-            </Card>
-          </Col>
-          <Col span={8}>
-            <Card hoverable cover={<img src="#" alt="" className="similar-product-image" />}>
-              <Title level={5}>Gói Tài Khoản Galaxy Play</Title>
-              <Button className="primary">Mua Ngay</Button>
-            </Card>
-          </Col>
-        </Row>
+        {othersProduct.map(product => (
+          <ProductCard key={product.id} handleDetail={handleViewDetail} product={product} />))}
       </div >
     </>
   );
