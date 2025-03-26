@@ -62,7 +62,7 @@ export const items = [
             Tài khoản Adobe Illustrator
           </Link>
         ),
-        key: 'netflix-vertical',
+        key: 'netflix-illustrator',
         className: 'd-flex',
         icon: <img loading="lazy" src="/content/images/illustrator.svg" alt="illustrator" />,
       },

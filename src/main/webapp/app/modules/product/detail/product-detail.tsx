@@ -43,20 +43,6 @@ const ProductDetailPage = () => {
     { key: '2', label: 'Đánh giá', children: <ProductRage product={detailProduct} /> },
   ];
 
-  const data = [
-    { key: '1', label: 'Thể loại', value: 'Giải trí, xem phim' },
-    { key: '2', label: 'Gói đăng ký', value: 'Cấp sẵn 1 User' },
-    { key: '3', label: 'Hạn gói', value: '4 Ngày' },
-    { key: '4', label: 'Bảo hành', value: 'Trọn gói' },
-    { key: '5', label: 'Hỗ trợ', value: 'Tất cả các thiết bị' },
-    { key: '6', label: 'Cho phép', value: '1 Thiết bị cùng lúc' },
-  ];
-
-  const columns = [
-    { dataIndex: 'label', key: 'label', className: 'label-column' },
-    { dataIndex: 'value', key: 'value', className: 'value-column' },
-  ];
-
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     dispatch(listenToStockUpdates()); // Lắng nghe cập nhật stock từ SignalR
@@ -140,11 +126,14 @@ const ProductDetailPage = () => {
             <Col span={10}>
               {handleMaxQuantity() === 0 ?
                 <Badge.Ribbon text="Hết hàng" color="gray" placement="start">
-                  <Image src={`${SERVER_API}${detailProduct?.imageUrl}`} alt="Netflix Premium" className="product-image" />
+                  <Image src={`${SERVER_API}${detailProduct?.imageUrl}`} alt={detailProduct?.name} className="product-image" />
                 </Badge.Ribbon>
-                : <Badge.Ribbon text={`Giảm -${46}%`} color="red" placement="start">
-                  <Image src={`${SERVER_API}${detailProduct?.imageUrl}`} alt="Netflix Premium" className="product-image" />
-                </Badge.Ribbon>
+                : detailProduct?.discount ?
+                  <Badge.Ribbon text={`Giảm -${detailProduct?.discount}%`} color="red" placement="start">
+                    <Image src={`${SERVER_API}${detailProduct?.imageUrl}`} alt={detailProduct?.name} className="product-image" />
+                  </Badge.Ribbon>
+                  :
+                  <Image src={`${SERVER_API}${detailProduct?.imageUrl}`} alt={detailProduct?.name} className="product-image" />
               }
             </Col>
             <Col span={14} className="d-flex flex-column gap-3">
@@ -156,7 +145,8 @@ const ProductDetailPage = () => {
               <div className="d-flex gap-2">
                 <Text className='fw-bold'>Giá:</Text>
                 <div className="d-flex gap-2">
-                  <Text delete>{formatCurrencyVND(detailProduct?.price)}đ</Text>
+                  {detailProduct?.discount &&
+                    <Text delete>{formatCurrencyVND(detailProduct?.price)}đ</Text>}
                   <span className="text-danger">{detailProduct?.newPrice ? `${formatCurrencyVND(detailProduct?.newPrice)}đ` : 'Đang cập nhật'}</span>
                 </div>
               </div>

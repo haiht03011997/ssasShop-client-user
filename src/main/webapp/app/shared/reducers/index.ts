@@ -9,6 +9,7 @@ import authentication from './authentication';
 import account from 'app/modules/account/account.reducer';
 import product from 'app/modules/product/product.reducer';
 import productReview from 'app/modules/product/detail/rate/product-review.reducer';
+import productFlashSale from '../component/flash-sale/flash-sale.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 const rootReducer: ReducersMapObject = {
@@ -20,6 +21,7 @@ const rootReducer: ReducersMapObject = {
   account,
   product,
   productReview,
+  productFlashSale,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   ...entitiesReducers,
 };

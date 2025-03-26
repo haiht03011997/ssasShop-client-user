@@ -3,14 +3,14 @@ import React, { useEffect } from 'react';
 import { products } from './config';
 import { useNavigate } from 'react-router';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
-import { getEntities } from './netflix.reducer';
+import { getEntities } from './youtube.reducer';
 
-const NetflixComponent = () => {
+const YoutubeComponent = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const netflixList = useAppSelector(state => state.netflix.entities);
-  const totalItems = useAppSelector(state => state.netflix.totalItems);
+  const youtubeList = useAppSelector(state => state.youtube.entities);
+  const totalItems = useAppSelector(state => state.youtube.totalItems);
 
   // initialize sate
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -20,7 +20,7 @@ const NetflixComponent = () => {
   }, [currentPage])
 
   const handleGetAllProducts = () => {
-    dispatch(getEntities("netflix"))
+    dispatch(getEntities("youtube"))
   }
 
   const handleViewDetail = (record: any) => {
@@ -36,16 +36,17 @@ const NetflixComponent = () => {
   };
 
   return (
-    <ProductPricing
+    youtubeList.length > 0 &&
+    (<ProductPricing
       handleBuy={handleBuy}
       handleChangePage={handlePageChange}
       handleDetail={handleViewDetail}
-      products={netflixList}
+      products={youtubeList}
       total={totalItems}
       currentPage={currentPage}
-      imgSrc="content/images/netflix.svg"
-      title="Netflix giá rẻ"
-    />
+      imgSrc="content/images/youtube.svg"
+      title="Youtube Premium"
+    />)
   );
 };
-export default NetflixComponent;
+export default YoutubeComponent;

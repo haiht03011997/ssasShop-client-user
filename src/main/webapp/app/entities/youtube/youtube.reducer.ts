@@ -21,7 +21,7 @@ const apiUrl = 'api/publicProduct';
 
 // Actions
 
-export const getEntities = createAsyncThunk('netflix/fetch_entity_list', async (category: string) => {
+export const getEntities = createAsyncThunk('youtube/fetch_entity_list', async (category: string) => {
   return api.get<IProduct[]>(apiUrl, {
     params: {
       category,
@@ -31,7 +31,7 @@ export const getEntities = createAsyncThunk('netflix/fetch_entity_list', async (
 });
 
 export const getEntity = createAsyncThunk(
-  'netflix/fetch_entity',
+  'youtube/fetch_entity',
   async (id: string | number) => {
     const requestUrl = `${apiUrl}/${id}`;
     return api.get<IProduct>(requestUrl);
@@ -40,7 +40,7 @@ export const getEntity = createAsyncThunk(
 );
 
 export const updateEntity = createAsyncThunk(
-  'netflix/update_entity',
+  'youtube/update_entity',
   async (entity: IProduct, thunkAPI) => {
     const result = await api.patch<IProduct>(`${apiUrl}`, cleanEntity(entity));
     return result;
@@ -50,8 +50,8 @@ export const updateEntity = createAsyncThunk(
 
 // slice
 
-export const NetflixSlice = createEntitySlice({
-  name: 'netflix',
+export const YoutubeSlice = createEntitySlice({
+  name: 'youtube',
   initialState,
   extraReducers(builder) {
     builder
@@ -89,7 +89,7 @@ export const NetflixSlice = createEntitySlice({
   },
 });
 
-export const { reset } = NetflixSlice.actions;
+export const { reset } = YoutubeSlice.actions;
 
 // Reducer
-export default NetflixSlice.reducer;
+export default YoutubeSlice.reducer;

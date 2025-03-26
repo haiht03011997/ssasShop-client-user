@@ -2,7 +2,7 @@ import './home.scss';
 
 import CustomCarousel from 'app/entities/carousel';
 import NetflixComponent from 'app/entities/netflix/netflix';
-import YoutubeComponent from 'app/entities/youtube';
+import YoutubeComponent from 'app/entities/youtube/youtube';
 import FlashSale from 'app/shared/component/flash-sale/flash-sale';
 import VerticalMenu from 'app/shared/layout/sidebar/customer/vertical/vertical-menu';
 import React from 'react';
