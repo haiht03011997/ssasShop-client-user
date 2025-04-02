@@ -118,6 +118,10 @@ const ProductDetailPage = () => {
     window.location.reload(); // Reload lại trang ngay sau khi điều hướng
   };
 
+  const handleContact = () => {
+    window.open('https://chat.zalo.me/')
+  }
+
   return (
     <>
       <div className="product-detail-container d-flex flex-column gap-3">
@@ -166,7 +170,7 @@ const ProductDetailPage = () => {
                   </Button>
                 </Col>
               </Row>
-              <Button size="large" className="warning w-100" icon={<MessageOutlined />}>
+              <Button size="large" onClick={() => { handleContact() }} className="warning w-100" icon={<MessageOutlined />}>
                 Liên Hệ Hỗ Trợ
               </Button>
             </Col>
@@ -212,10 +216,12 @@ const ProductDetailPage = () => {
 
         {/* Similar Products */}
         <Title level={4} className="section-title">
-          Sản phẩm tương tự
+          Các sản phẩm tương tự
         </Title>
-        {othersProduct.map(product => (
-          <ProductCard key={product.id} handleDetail={handleViewDetail} product={product} />))}
+        <Row gutter={[16, 16]}>
+          {othersProduct.map(product => (
+            <ProductCard key={product.id} handleDetail={handleViewDetail} product={product} />))}
+        </Row>
       </div >
     </>
   );

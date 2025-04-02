@@ -20,7 +20,7 @@ const NetflixComponent = () => {
   }, [currentPage])
 
   const handleGetAllProducts = () => {
-    dispatch(getEntities("netflix"))
+    dispatch(getEntities())
   }
 
   const handleViewDetail = (record: any) => {

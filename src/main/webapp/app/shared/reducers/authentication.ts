@@ -92,7 +92,6 @@ export const AuthenticationSlice = createSlice({
     logoutSession() {
       return {
         ...initialState,
-        showModalLogin: true,
       };
     },
     handleLoginModal(state, action) {

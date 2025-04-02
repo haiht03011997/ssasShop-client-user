@@ -2,7 +2,7 @@
   "name": "QLKH",
   "version": "0.0.1-SNAPSHOT",
   "private": true,
-  "description": "Description for Quản lý kế hoạch",
+  "description": "Description for Tai Khoan AI",
   "license": "UNLICENSED",
   "scripts": {
     "build": "npm run webapp:prod --",

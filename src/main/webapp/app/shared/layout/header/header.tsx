@@ -2,7 +2,7 @@ import './header.scss';
 
 import React, { useEffect, useState } from 'react';
 
-import { Badge, MenuProps } from 'antd';
+import { Badge, MenuProps, Typography } from 'antd';
 import Search from 'antd/es/input/Search';
 import { Header } from 'antd/es/layout/layout';
 import { Container } from 'reactstrap';
@@ -12,6 +12,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingCartOutlined } from '@ant-design/icons';
 import { useAppSelector } from 'app/config/store';
 
+const { Text } = Typography;
 export interface IHeaderProps {
   isAuthenticated: boolean;
   isAdmin: boolean;
@@ -51,7 +52,7 @@ const HeaderComponent = (props: IHeaderProps) => {
     <Header className="header">
       <Container className="d-flex gap-3 justify-content-center align-items-center">
         <Link className="link-home" to={'/'}>
-          Website-demo.com.vn
+          <Text prefixCls='text-white'>TaiKhoanAi.shop</Text>
         </Link>
         <HorizontalMenu />
         <Search className="w-50" size="large" placeholder="Nhập giá trị tìm kiếm" onSearch={handleSearch} enterButton />

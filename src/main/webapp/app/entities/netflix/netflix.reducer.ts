@@ -21,7 +21,7 @@ const apiUrl = 'api/publicProduct';
 
 // Actions
 
-export const getEntities = createAsyncThunk('netflix/fetch_entity_list', async (category: string) => {
+export const getEntities = createAsyncThunk('netflix/fetch_entity_list', async (category = null) => {
   return api.get<IProduct[]>(apiUrl, {
     params: {
       category,

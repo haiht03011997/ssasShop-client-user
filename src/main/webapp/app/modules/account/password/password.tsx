@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
+import React, { useEffect, useState } from 'react';
 
-import { useAppDispatch, useAppSelector } from 'app/config/store';
-import PasswordStrengthBar from 'app/shared/layout/password/password-strength-bar';
-import { savePassword, reset } from './password.reducer';
 import { Button, Col, Form, Input, Modal, Row } from 'antd';
 import Title from 'antd/es/typography/Title';
-import { useNavigate } from 'react-router-dom';
 import { passwordRegex } from 'app/config/constants';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
+import PasswordStrengthBar from 'app/shared/layout/password/password-strength-bar';
+import { useNavigate } from 'react-router-dom';
+import { savePassword } from './password.reducer';
 
 export const PasswordPage = () => {
   const dispatch = useAppDispatch();

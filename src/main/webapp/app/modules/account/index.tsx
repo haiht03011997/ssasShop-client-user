@@ -8,7 +8,7 @@ import ResetPasswordFinish from './password-reset/finish/password-reset-finish';
 const AccountRoutes = () => (
   <div>
     <ErrorBoundaryRoutes>
-      <Route path="password" element={<Password />} />
+      <Route path="cap-nhat-mat-khau" element={<Password />} />
       <Route path="reset">
         <Route path="request" element={<ResetPassword />} />
         <Route path="finish" element={<ResetPasswordFinish />} />

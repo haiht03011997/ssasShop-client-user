@@ -22,7 +22,7 @@ const ProductPricing = ({ handleBuy, handleChangePage, handleDetail, products, t
       <div className="product-header">
         <img src={imgSrc} loading="lazy" />
         <Title level={3} className="product-title">
-          {title}
+          Danh sách sản phẩm
         </Title>
       </div>
       <Row gutter={[16, 16]}>

@@ -3,7 +3,7 @@ import { Dropdown, Space } from 'antd';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import LoginModal from 'app/modules/login/login-modal';
 import { handleLoginModal } from 'app/shared/reducers/authentication';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
 const accountMenuItemsAuthenticated = [
@@ -22,17 +22,23 @@ const accountMenuItemsAuthenticated = [
 export const AccountMenu = ({ isAuthenticated = false }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const loginSuccess = useAppSelector(context => context.authentication.loginSuccess)
   const showModalLogin = useAppSelector(state => state.authentication.showModalLogin);
   const account = useAppSelector(state => state.account.info);
+
+  useEffect(() => {
+    if (loginSuccess)
+      navigate("/")
+  }, [loginSuccess])
 
   const handleMenuClick = (event: any) => {
     const key = event.key;
     switch (key) {
       case 'logout':
-        navigate('logout');
+        navigate('/dang-xuat');
         break;
       case 'passwordItem':
-        navigate('password');
+        navigate('/tai-khoan/cap-nhat-mat-khau');
         break;
       default:
         break;

@@ -1,9 +1,9 @@
 import { Button, Checkbox, Col, Form, Input, Modal, Row } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import Title from 'antd/es/typography/Title';
-import { useAppDispatch } from 'app/config/store';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { auth } from 'app/shared/reducers/authentication';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 export interface ILoginModalProps {

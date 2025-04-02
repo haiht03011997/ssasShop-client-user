@@ -13,7 +13,7 @@ const { Title, Text } = Typography;
 const ProductCard = ({ product, handleDetail }: IProductCardProps) => {
 
   return (
-    <Col md={6} key={product.id}>
+    <Col md={6}>
       {product.discount ?
         <Badge.Ribbon text={`Giảm -${product.discount}% `} color="red" placement="start" className="discount-ribbon">
           <Card hoverable className="product-card" cover={<Image alt={product.name} src={`${SERVER_API}${product.imageUrl}`} className="product-image" />}>

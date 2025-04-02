@@ -5,8 +5,8 @@ import { AUTHORITIES } from './config/constants';
 import Account from './modules/account';
 import PasswordResetFinish from './modules/account/password-reset/finish/password-reset-finish';
 import PasswordResetInit from './modules/account/password-reset/init/reset-password';
+import Contact from './modules/contact/contact';
 import Home from './modules/home/home';
-import Login from './modules/login/login-modal';
 import Logout from './modules/login/logout';
 import PrivateRoute from './shared/auth/private-route';
 import ErrorBoundaryRoutes from './shared/error/error-boundary-routes';
@@ -20,13 +20,11 @@ const AppRoutes = () => {
           path="/"
           index
           element={
-            <PrivateRoute>
-              <Home />
-            </PrivateRoute>
+            <Home />
           }
         />
-        <Route path="logout" element={<Logout />} />
-        <Route path="account">
+        <Route path="dang-xuat" element={<Logout />} />
+        <Route path="tai-khoan">
           <Route
             path="*"
             element={
@@ -43,9 +41,7 @@ const AppRoutes = () => {
         <Route
           path="*"
           element={
-            <PrivateRoute hasAnyAuthorities={[AUTHORITIES.USER]}>
-              <EntitiesRoutes />
-            </PrivateRoute>
+            <EntitiesRoutes />
           }
         />
         <Route path="*" element={<PageNotFound />} />
