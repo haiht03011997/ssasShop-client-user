@@ -16,9 +16,9 @@ const ProductCard = ({ product, handleDetail }: IProductCardProps) => {
     <Col md={6}>
       {product.discount ?
         <Badge.Ribbon text={`Giảm -${product.discount}% `} color="red" placement="start" className="discount-ribbon">
-          <Card hoverable className="product-card" cover={<Image alt={product.name} src={`${SERVER_API}${product.imageUrl}`} className="product-image" />}>
+          <Card hoverable className="product-card" cover={<Image height={170} alt={product.name} src={`${SERVER_API}${product.imageUrl}`} className="product-image" />}>
             <div className="d-flex flex-column gap-3">
-              <Title level={5} className="mx-2 product-product-title">
+              <Title level={5} ellipsis={{ rows: 2 }} className="mx-2 product-product-title">
                 <Link onClick={() => {
                   handleDetail(product);
                 }}>
@@ -40,13 +40,13 @@ const ProductCard = ({ product, handleDetail }: IProductCardProps) => {
                   onClick={() => {
                     handleDetail(product);
                   }}
-                  className="detail-button w-100"
+                  className="detail-button primary w-100"
                 >
                   Chi tiết
                 </Button>
-                <Button size="large" className="buy-button primary w-100">
+                {/* <Button size="large" className="buy-button primary w-100">
                   Mua ngay
-                </Button>
+                </Button> */}
               </div>
             </div>
           </Card>
@@ -68,17 +68,16 @@ const ProductCard = ({ product, handleDetail }: IProductCardProps) => {
             <div className="product-buttons">
               <Button
                 size="large"
-                type="default"
                 onClick={() => {
                   handleDetail(product);
                 }}
-                className="detail-button w-100"
+                className="detail-button primary w-100"
               >
                 Chi tiết
               </Button>
-              <Button size="large" className="buy-button primary w-100">
+              {/* <Button size="large" className="buy-button primary w-100">
                 Mua ngay
-              </Button>
+              </Button> */}
             </div>
           </div>
         </Card>}

@@ -5,7 +5,6 @@ import { AUTHORITIES } from './config/constants';
 import Account from './modules/account';
 import PasswordResetFinish from './modules/account/password-reset/finish/password-reset-finish';
 import PasswordResetInit from './modules/account/password-reset/init/reset-password';
-import Contact from './modules/contact/contact';
 import Home from './modules/home/home';
 import Logout from './modules/login/logout';
 import PrivateRoute from './shared/auth/private-route';

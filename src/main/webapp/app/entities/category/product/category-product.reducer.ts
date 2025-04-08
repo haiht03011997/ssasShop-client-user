@@ -3,9 +3,9 @@ import { api } from 'app/config/axios-interceptor';
 import { IProduct } from 'app/shared/model/product.model';
 import {
   createEntitySlice,
+  IQueryParams,
   serializeAxiosError
 } from 'app/shared/reducers/reducer.utils';
-import { cleanEntity } from 'app/shared/util/entity-utils';
 
 const initialState: any = {
   loading: false,
@@ -20,18 +20,28 @@ const initialState: any = {
 const apiUrl = 'api/publicProduct';
 
 // Actions
-
-export const getEntities = createAsyncThunk('netflix/fetch_entity_list', async (category = null) => {
+interface IGetOtherEntities extends IQueryParams {
+  category?: string;
+  name?: string;
+  min?: number;
+  max?: number;
+}
+export const getEntities = createAsyncThunk('categoryProduct/fetch_entity_list', async ({ category, name, min, max, sort, page }: IGetOtherEntities) => {
   return api.get<IProduct[]>(apiUrl, {
     params: {
       category,
+      name,
+      sort,
+      min,
+      max,
+      page,
       cacheBuster: new Date().getTime(),
     },
   });
 });
 
 export const getEntity = createAsyncThunk(
-  'netflix/fetch_entity',
+  'categoryProduct/fetch_entity',
   async (id: string | number) => {
     const requestUrl = `${apiUrl}/${id}`;
     return api.get<IProduct>(requestUrl);
@@ -39,19 +49,10 @@ export const getEntity = createAsyncThunk(
   { serializeError: serializeAxiosError },
 );
 
-export const updateEntity = createAsyncThunk(
-  'netflix/update_entity',
-  async (entity: IProduct, thunkAPI) => {
-    const result = await api.patch<IProduct>(`${apiUrl}`, cleanEntity(entity));
-    return result;
-  },
-  { serializeError: serializeAxiosError },
-);
-
 // slice
 
 export const NetflixSlice = createEntitySlice({
-  name: 'netflix',
+  name: 'categoryProduct',
   initialState,
   extraReducers(builder) {
     builder
@@ -70,21 +71,10 @@ export const NetflixSlice = createEntitySlice({
           totalItems: parseInt(headers['x-total-count'], 10),
         };
       })
-      .addMatcher(isFulfilled(updateEntity), (state, action) => {
-        state.updating = false;
-        state.loading = false;
-        state.updateSuccess = true;
-        state.entity = action.payload.data;
-      })
       .addMatcher(isPending(getEntities, getEntity), state => {
         state.errorMessage = null;
         state.updateSuccess = false;
         state.loading = true;
-      })
-      .addMatcher(isPending(updateEntity), state => {
-        state.errorMessage = null;
-        state.updateSuccess = false;
-        state.updating = true;
       });
   },
 });

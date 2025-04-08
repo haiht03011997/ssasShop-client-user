@@ -5,7 +5,8 @@ import { Footer } from 'antd/es/layout/layout';
 import React, { useState } from 'react';
 import { Container } from 'reactstrap';
 import Contact from 'app/modules/contact/contact';
-
+import { makeIcon } from 'app/shared/component/icon/makeIcon';
+import { AppstoreAddOutlined, CreditCardOutlined, ReloadOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
 const { Text } = Typography;
 
 const FooterComponent = () => {
@@ -29,8 +30,8 @@ const FooterComponent = () => {
         <Container className="d-flex flex-column align-items-center py-3">
           <Row className="w-100 d-flex justify-content-around">
             <Col>
-              <div className="d-flex gap-2 icon-box-text">
-                <img src="content/images/transfer.svg" alt="logo" />
+              <div className="d-flex gap-3 icon-box-text">
+                {makeIcon(SafetyCertificateOutlined, "blue")}
                 <div className="d-flex flex-column">
                   <span>Tài khoản chính hãng</span>
                   <span>Uy tín</span>
@@ -38,8 +39,8 @@ const FooterComponent = () => {
               </div>
             </Col>
             <Col>
-              <div className="d-flex gap-2 icon-box-text">
-                <img src="content/images/transfer.svg" alt="logo" />
+              <div className="d-flex gap-3 icon-box-text">
+                {makeIcon(ReloadOutlined, "green")}
                 <div className="d-flex flex-column">
                   <span>Cập nhật sản phẩm</span>
                   <span>Hỗ trợ trọn đời</span>
@@ -47,8 +48,8 @@ const FooterComponent = () => {
               </div>
             </Col>
             <Col>
-              <div className="d-flex gap-2 icon-box-text">
-                <img src="content/images/transfer.svg" alt="logo" />
+              <div className="d-flex gap-3 icon-box-text">
+                {makeIcon(AppstoreAddOutlined, "orange")}
                 <div className="d-flex flex-column">
                   <span>Bổ sung sản phẩm</span>
                   <span>Liên tục hàng tháng</span>
@@ -56,8 +57,8 @@ const FooterComponent = () => {
               </div>
             </Col>
             <Col>
-              <div className="d-flex gap-2 icon-box-text">
-                <img src="content/images/transfer.svg" alt="logo" />
+              <div className="d-flex gap-3 icon-box-text">
+                {makeIcon(CreditCardOutlined, "purple")}
                 <div className="d-flex flex-column">
                   <span>Đặt hàng thanh toán</span>
                   <span>Linh hoạt, bảo mật</span>

@@ -6,6 +6,7 @@ import ProductDetailPage from 'app/modules/product/detail/product-detail';
 import CartPage from './cart';
 import Order from './order';
 import Payment from './payment';
+import CategoryProduct from './category/product';
 
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
@@ -14,6 +15,7 @@ export default () => {
     <div>
       <ErrorBoundaryRoutes>
         {/* prettier-ignore */}
+        <Route path=":slug" element={<CategoryProduct />} />
         <Route path="chi-tiet/:slug" element={<ProductDetailPage />} />
         <Route path="gio-hang" element={<CartPage />} />
         <Route path="dat-hang" element={<Order />} />

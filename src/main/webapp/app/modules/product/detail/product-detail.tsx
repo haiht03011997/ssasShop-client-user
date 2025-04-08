@@ -2,17 +2,19 @@ import { InfoCircleOutlined, MessageOutlined, ShoppingCartOutlined } from '@ant-
 import { Badge, Button, Card, Col, Divider, Image, InputNumber, Rate, Row, Tabs, Typography } from 'antd';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { addToCart, listenToStockUpdates, setCart, setLoadingCart } from 'app/entities/cart/cart.reducer';
-import { getEntity } from 'app/entities/netflix/netflix.reducer';
-import { formatCurrencyVND } from 'app/shared/util/help';
+import { getEntity } from 'app/entities/category/product/category-product.reducer';
+import { calculateStats, formatCurrencyVND } from 'app/shared/util/help';
 import parse from "html-react-parser";
 import _ from 'lodash';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import ProductCard from '../list/product-item';
 import { getOtherEntities } from '../product.reducer';
 import ProductDescription from './description/product-description';
 import ProductRage from './rate/product-rate';
 import './style.scss';
+import Contact from 'app/modules/contact/contact';
+import { getEntities as getReviews } from './rate/product-review.reducer';
 
 const { Title, Text } = Typography;
 
@@ -25,10 +27,22 @@ const ProductDetailPage = () => {
 
   const cartItems = useAppSelector(state => state.cart.cartItems);
   const othersProduct = useAppSelector(state => state.product.entities);
-
+  const reviews = useAppSelector(context => context.productReview.entities)
   // initialize state
-  const [expand, collapse] = React.useState(false);
-  const [detailProduct, setDetailProduct] = React.useState(null)
+  const [expand, collapse] = useState(false);
+  const [detailProduct, setDetailProduct] = useState(null)
+  const [isOpenModalContact, setOpenModalContact] = useState(false);
+
+  const stats = useMemo(() => {
+    return calculateStats(reviews); // return object chứa avgRating, totalReviews
+  }, [reviews]);
+
+  const { avgRating, totalReviews } = stats;
+
+  const handleOpenModalContact = (event) => {
+    event.preventDefault();
+    setOpenModalContact(true);
+  }
 
   const handleExpandContent = () => {
     collapse(!expand);
@@ -50,8 +64,10 @@ const ProductDetailPage = () => {
   }, []);
 
   useEffect(() => {
-    if (detailProduct)
+    if (detailProduct) {
       handleFetchOtherProducts()
+      dispatch(getReviews(detailProduct?.id))
+    }
   }, [detailProduct])
 
   const handleGetDetailProduct = () => {
@@ -118,10 +134,6 @@ const ProductDetailPage = () => {
     window.location.reload(); // Reload lại trang ngay sau khi điều hướng
   };
 
-  const handleContact = () => {
-    window.open('https://chat.zalo.me/')
-  }
-
   return (
     <>
       <div className="product-detail-container d-flex flex-column gap-3">
@@ -141,10 +153,10 @@ const ProductDetailPage = () => {
               }
             </Col>
             <Col span={14} className="d-flex flex-column gap-3">
-              <Title className='fw-bold' level={3}>{slug}</Title>
+              <Title className='fw-bold' level={3}>{detailProduct?.name}</Title>
               <div className="d-flex gap-2">
-                <Rate allowHalf defaultValue={4.5} />
-                <Text type="secondary"> 2 đánh giá | Đã bán 1.5k</Text>
+                <Rate allowHalf disabled value={avgRating} />
+                <Text type="secondary"> {totalReviews} đánh giá</Text>
               </div>
               <div className="d-flex gap-2">
                 <Text className='fw-bold'>Giá:</Text>
@@ -159,7 +171,7 @@ const ProductDetailPage = () => {
                 <InputNumber disabled={handleMaxQuantity() === 0} defaultValue={1} min={1} max={handleMaxQuantity()} onChange={(value) => { handleChangeQuantity(value) }} />
               </div>
               <Row className="d-flex justify-content-between" gutter={16}>
-                <Col md={12}>
+                {/* <Col md={12}>
                   <Button size="large" disabled={handleMaxQuantity() === 0} onClick={e => { handleAddToCart(e, detailProduct) }} className="primary w-100" icon={<ShoppingCartOutlined />}>
                     Thêm Giỏ Hàng
                   </Button>
@@ -168,9 +180,9 @@ const ProductDetailPage = () => {
                   <Button size="large" disabled={handleMaxQuantity() === 0} className="primary w-100">
                     Mua Ngay
                   </Button>
-                </Col>
+                </Col> */}
               </Row>
-              <Button size="large" onClick={() => { handleContact() }} className="warning w-100" icon={<MessageOutlined />}>
+              <Button size="large" onClick={handleOpenModalContact} className="warning w-100" icon={<MessageOutlined />}>
                 Liên Hệ Hỗ Trợ
               </Button>
             </Col>
@@ -222,6 +234,7 @@ const ProductDetailPage = () => {
           {othersProduct.map(product => (
             <ProductCard key={product.id} handleDetail={handleViewDetail} product={product} />))}
         </Row>
+        <Contact handleClose={() => { setOpenModalContact(false) }} isModalOpen={isOpenModalContact} />
       </div >
     </>
   );

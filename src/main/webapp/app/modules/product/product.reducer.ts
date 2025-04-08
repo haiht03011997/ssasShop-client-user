@@ -5,7 +5,6 @@ import {
   createEntitySlice,
   serializeAxiosError
 } from 'app/shared/reducers/reducer.utils';
-import { cleanEntity } from 'app/shared/util/entity-utils';
 
 const initialState: any = {
   loading: false,
@@ -29,6 +28,23 @@ export const getOtherEntities = createAsyncThunk(
   { serializeError: serializeAxiosError },
 );
 
+export const getEntities = createAsyncThunk('product/fetch_entity_list', async () => {
+  return api.get<IProduct[]>(apiUrl, {
+    params: {
+      cacheBuster: new Date().getTime(),
+    },
+  });
+});
+
+export const getEntity = createAsyncThunk(
+  'product/fetch_entity',
+  async (id: string | number) => {
+    const requestUrl = `${apiUrl}/${id}`;
+    return api.get<IProduct>(requestUrl);
+  },
+  { serializeError: serializeAxiosError },
+);
+
 // slice
 
 export const ProductSlice = createEntitySlice({
@@ -36,6 +52,21 @@ export const ProductSlice = createEntitySlice({
   initialState,
   extraReducers(builder) {
     builder
+      .addCase(getEntity.fulfilled, (state, action) => {
+        state.loading = false;
+        state.updateSuccess = false;
+        state.entity = action.payload.data;
+      })
+      .addMatcher(isFulfilled(getEntities), (state, action) => {
+        const { data, headers } = action.payload;
+
+        return {
+          ...state,
+          loading: false,
+          entities: data,
+          totalItems: parseInt(headers['x-total-count'], 10),
+        };
+      })
       .addMatcher(isFulfilled(getOtherEntities), (state, action) => {
         const { data, headers } = action.payload;
 
@@ -45,6 +76,11 @@ export const ProductSlice = createEntitySlice({
           entities: data,
           totalItems: parseInt(headers['x-total-count'], 10),
         };
+      })
+      .addMatcher(isPending(getEntities, getEntity), state => {
+        state.errorMessage = null;
+        state.updateSuccess = false;
+        state.loading = true;
       })
       .addMatcher(isPending(getOtherEntities), state => {
         state.errorMessage = null;

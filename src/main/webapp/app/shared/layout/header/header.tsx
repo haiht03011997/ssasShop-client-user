@@ -2,15 +2,14 @@ import './header.scss';
 
 import React, { useEffect, useState } from 'react';
 
-import { Badge, MenuProps, Typography } from 'antd';
+import { MenuProps, Typography } from 'antd';
 import Search from 'antd/es/input/Search';
 import { Header } from 'antd/es/layout/layout';
+import { useAppSelector } from 'app/config/store';
+import { Link, useNavigate } from 'react-router-dom';
 import { Container } from 'reactstrap';
 import { AccountMenu } from '../menus';
 import HorizontalMenu from '../sidebar/customer/horizontal/horizontal-menu';
-import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingCartOutlined } from '@ant-design/icons';
-import { useAppSelector } from 'app/config/store';
 
 const { Text } = Typography;
 export interface IHeaderProps {
@@ -40,7 +39,7 @@ const HeaderComponent = (props: IHeaderProps) => {
   };
 
   const handleSearch = (searchText: string) => {
-    console.warn('search:', searchText);
+    navigate('/san-pham?ten=' + searchText, { state: { name: searchText } });
   };
 
   const openCart = (event) => {
@@ -58,7 +57,7 @@ const HeaderComponent = (props: IHeaderProps) => {
         <Search className="w-50" size="large" placeholder="Nhập giá trị tìm kiếm" onSearch={handleSearch} enterButton />
         <div className="d-flex justify-content-center gap-3 align-items-center">
           <AccountMenu isAuthenticated={props.isAuthenticated} />
-          <Badge count={cartItems.length}><ShoppingCartOutlined onClick={e => { openCart(e) }} className={`cursor-pointer display-6 text-white cart-container ${cartUpdated ? 'cart-updated' : ''}`} /></Badge>
+          {/* <Badge count={cartItems.length}><ShoppingCartOutlined onClick={e => { openCart(e) }} className={`cursor-pointer display-6 text-white cart-container ${cartUpdated ? 'cart-updated' : ''}`} /></Badge> */}
         </div>
       </Container>
     </Header>

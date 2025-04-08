@@ -3,18 +3,7 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 import React, { useEffect } from 'react';
 import { createReview, getEntities } from './product-review.reducer';
 import './style.scss';
-
-const calculateStats = values => {
-  const totalReviews = values.length;
-  const avgRating = totalReviews > 0 ? values.reduce((acc, cur) => acc + cur.rating, 0) / totalReviews : 0;
-
-  const ratingCounts = [0, 0, 0, 0, 0];
-  values.forEach(review => {
-    ratingCounts[review.rating - 1] += 1;
-  });
-
-  return { avgRating, ratingCounts, totalReviews };
-};
+import { calculateStats } from 'app/shared/util/help';
 interface IProductProps {
   product: any;
 }
@@ -26,11 +15,6 @@ const ProductRage = ({ product }: IProductProps) => {
   const updateSuccess = useAppSelector(context => context.productReview.updateSuccess)
 
   const { avgRating, ratingCounts, totalReviews } = calculateStats(reviews);
-
-  useEffect(() => {
-    if (product)
-      handleGetPageReviews();
-  }, [product])
 
   useEffect(() => {
     if (updateSuccess) {

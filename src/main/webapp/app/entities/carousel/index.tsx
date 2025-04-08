@@ -3,7 +3,7 @@ import { Carousel, Image } from 'antd';
 import './style.scss'
 const CustomCarousel = () => {
   return (
-    <Carousel className="carousel-mid" autoplay={false} dotPosition="bottom" autoplaySpeed={2000}>
+    <Carousel className="carousel-mid" dotPosition="bottom" autoplaySpeed={2000}>
       <Image height={420} className="image-slide rounded" loading="lazy" src="/content/images/slide/capcut-59435.webp" />
       <Image height={420} className="image-slide rounded" loading="lazy" src="/content/images/slide/netflix-slide.webp" />
       <Image height={420} className="image-slide rounded" loading="lazy" src="/content/images/slide/youtube-Slide.webp" />

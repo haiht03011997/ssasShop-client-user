@@ -5,4 +5,9 @@
   justify-content: center;
   max-height: 40px;
   border-radius: 8px;
+
+}
+
+.ant-menu-submenu-popup .ant-menu-vertical .ant-menu-item {
+  display: flex !important;
 }

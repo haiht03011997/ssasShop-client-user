@@ -9,7 +9,7 @@ interface IContactProps {
   handleClose: () => void,
   linkQR?: string,
 }
-const Contact = ({ isModalOpen, linkQR, handleClose }: IContactProps) => {
+const Contact = React.memo(({ isModalOpen, linkQR, handleClose }: IContactProps) => {
   return (
     <Modal
       title={null}
@@ -56,5 +56,5 @@ const Contact = ({ isModalOpen, linkQR, handleClose }: IContactProps) => {
       </div>
     </Modal>
   );
-}
+})
 export default Contact

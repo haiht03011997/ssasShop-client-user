@@ -385,3 +385,20 @@ http://stackoverflow.com/questions/23436430/bootstrap-3-input-group-100-width */
 .width-min {
   width: 1% !important;
 }
+
+$colors: (
+  "red": #f5222d,
+  "purple": #722ed1,
+  "orange": #fa8c16,
+  "green": #52c41a,
+  "blue": #1890ff,
+  "pink": #eb2f96,
+  "darkred": #ff4d4f,
+  "gray": #595959,
+);
+
+@each $name, $hex in $colors {
+  .c-#{$name} {
+    color: #{$hex} !important;
+  }
+}

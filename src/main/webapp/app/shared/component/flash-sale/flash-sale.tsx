@@ -45,7 +45,7 @@ const FlashSale = () => {
         </div>
       </div>
       <Carousel autoplay dots={false} slidesToShow={4}>
-        {products.map(product => (
+        {products ?? [].map(product => (
           <Col key={product.id}>
             <Badge.Ribbon text={`Giảm -${product.discount}%`} color="red" placement='start' className="discount-ribbon">
               <Card
