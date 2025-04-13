@@ -61,7 +61,7 @@ const ProductDetailPage = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     dispatch(listenToStockUpdates()); // Lắng nghe cập nhật stock từ SignalR
     handleGetDetailProduct();
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     if (detailProduct) {
@@ -134,6 +134,10 @@ const ProductDetailPage = () => {
     window.location.reload(); // Reload lại trang ngay sau khi điều hướng
   };
 
+  const handleOtherDetail = (record: any) => {
+    navigate(`/chi-tiet/${record.slug}`, { state: { id: record.id } });
+  };
+
   return (
     <>
       <div className="product-detail-container d-flex flex-column gap-3">
@@ -169,6 +173,16 @@ const ProductDetailPage = () => {
               <div className="d-flex gap-2 align-items-center">
                 <Text className='fw-bold'>Số lượng:</Text>
                 <InputNumber disabled={handleMaxQuantity() === 0} defaultValue={1} min={1} max={handleMaxQuantity()} onChange={(value) => { handleChangeQuantity(value) }} />
+              </div>
+              <div className="d-flex gap-2 align-items-center">
+                <Text className='fw-bold'>Thời hạn gói:</Text>
+                {detailProduct?.variants.map(v => {
+                  return (
+                    <Button disabled={v?.id === id} key={v?.durationName} onClick={() => {handleOtherDetail(v)}} color="cyan" variant="solid">
+                      {v?.durationName}
+                    </Button>
+                  )
+                }) }
               </div>
               <Row className="d-flex justify-content-between" gutter={16}>
                 {/* <Col md={12}>
