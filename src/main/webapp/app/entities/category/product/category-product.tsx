@@ -18,6 +18,7 @@ const CategoryProductList = () => {
   const totalItems = useAppSelector(state => state.categoryProduct.totalItems);
   const categoryParam = location.state?.category; // Lấy id từ state
   const name = location.state?.name; // Lấy name từ state
+    const { slug } = useParams(); // Lấy slug từ URL
 
   const [paginationState, setPaginationState] = useState(
     overridePaginationStateWithQueryParams(getPaginationState(location, ITEMS_PER_PAGE, 'lastModifiedDate', DESC), location.search),
@@ -38,7 +39,7 @@ const CategoryProductList = () => {
 
   useEffect(() => {
     handleGetAllProducts();
-  }, [paginationState, name]);
+  }, [paginationState, slug]);
 
   const handleGetAllProducts = () => {
     dispatch(getEntities({ category: categoryParam, name, min: 0, max: maxPrice, sort: `${paginationState.sort},${paginationState.order}`, page: paginationState.activePage - 1 }));
